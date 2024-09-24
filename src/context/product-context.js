@@ -1,9 +1,11 @@
 // import React from "react";
 
 import { createContext, useState } from "react";
+import { toggleFav } from "../store/actions/products";
 
 export const ProductContext = createContext({
-    product: []
+    products: [],
+    toggleFav: (id) => {}
 });
 
 
@@ -35,8 +37,24 @@ export default function ProductContextProvider(props) {
         },
     ]);
 
+    const toggleFavorite = (productId) => {
+        setProductsList(currentProductList => {
+            const prodIndex = currentProductList.findIndex(
+                p => p.id === productId
+              );
+              const newFavStatus = !currentProductList[prodIndex].isFavorite;
+              const updatedProducts = [...currentProductList];
+              updatedProducts[prodIndex] = {
+                ...currentProductList[prodIndex],
+                isFavorite: newFavStatus
+              };
+              return updatedProducts;
+        });
+    };
+
     const ctxValue = {
-        products: productsList
+        products: productsList,
+        toggleFav: toggleFavorite,
     };
 
     return (
